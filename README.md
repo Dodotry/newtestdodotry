@@ -6,3 +6,5 @@
 
 3、单文件打包命令
 pyinstaller -F -w -i .\assets\icon.ico --splash .\assets\load.png -n "视频剪辑工具" .\main.py
+
+依赖：flet==0.80.2
