@@ -7,6 +7,7 @@
 
 3、单文件打包命令
 pyinstaller -F -w -i .\assets\icon.ico --splash .\assets\load.png -n "视频剪辑工具" .\main.py
+
 flet pack -i .\assets\icon.ico -n "视频剪辑工具" --product-name "视频剪辑工具" --file-description "基于FFmpeg的视频剪辑工具" --file-version "1.0.2" --copyright "Copyright @2026 By Dodotry" -y ./main.py
 
 
