@@ -3,10 +3,14 @@
 如：ffmpeg-n8.0-latest-win64-lgpl-8.0.zip
 
 2、将ffmpeg.exe文件解压缩，放到本程序同一目录下，只要ffmpeg.exe单文件即可。
+依赖：flet==0.80.2
 
 3、单文件打包命令
 pyinstaller -F -w -i .\assets\icon.ico --splash .\assets\load.png -n "视频剪辑工具" .\main.py
+flet pack -i .\assets\icon.ico -n "视频剪辑工具" --product-name "视频剪辑工具" --file-description "基于FFmpeg的视频剪辑工具" --file-version "1.0.2" --copyright "Copyright @2026 By Dodotry" -y ./main.py
 
-依赖：flet==0.80.2
+
 
 flet build --project "EditVideo" --description "基于FFmpeg的视频剪辑工具" --product "EditVideo" --company "Lix" --copyright "Copyright @2026 By Dodotry" --no-web-splash --no-ios-splash --no-android-splash  --cleanup-app --cleanup-packages --clear-cache --build-version "1.0.2" windows --module-name ./main.py
+
+flet build的时候，--project、-product不支持中文，需要英文，不然报找不到main
