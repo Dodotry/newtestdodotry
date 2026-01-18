@@ -8,3 +8,5 @@
 pyinstaller -F -w -i .\assets\icon.ico --splash .\assets\load.png -n "视频剪辑工具" .\main.py
 
 依赖：flet==0.80.2
+
+flet build --project "EditVideo" --description "基于FFmpeg的视频剪辑工具" --product "视频剪辑工具" --company "Lix" --copyright "Copyright @2026 By Dodotry" --no-web-splash --no-ios-splash --no-android-splash  --cleanup-app --cleanup-packages windows --module-name main.py
