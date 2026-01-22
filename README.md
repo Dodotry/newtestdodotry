@@ -39,4 +39,5 @@ python -m nuitka --mode=standalone `
 --windows-company-name="dodotry" `
 --windows-product-name="视频裁剪工具" `
 --windows-file-description="基于ffmpeg的视频裁剪工具" `
+--include-windows-runtime-dlls=yes `
 --assume-yes-for-downloads --show-progress main.py
