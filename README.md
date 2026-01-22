@@ -45,5 +45,6 @@ python -m nuitka --mode=standalone `
 --windows-product-name="视频裁剪工具" `
 --windows-file-description="基于ffmpeg的视频裁剪工具" `
 --include-windows-runtime-dlls=yes `
+--include-data-files=D:\\uvtest\\src\\editvedio\\ffmpeg.exe=./ffmpeg.exe
 --assume-yes-for-downloads --show-progress main.py
 ```
