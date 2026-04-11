@@ -54,7 +54,7 @@ python -m nuitka --mode=onefile `
 >> --lto=yes --remove-output `
 >> --assume-yes-for-downloads --low-memory --windows-icon-from-ico="D:\Users\Dodotry\Downloads\fit.ico" `
 >> --file-version="0.1.0" --product-version="0.1.0" --product-name='csvtoxlsx' --copyright="Copyright@2026 By Dodotry" --enable-plugin=tk-inter `
->> --windows-console-mode=disable `
+>> --windows-console-mode=disable --plugin-enable=anti-bloat --python-flag=no_docstrings `
 >> --run .\csvtoxlsx.py
 
 ```
