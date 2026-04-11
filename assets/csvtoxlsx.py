@@ -6,15 +6,29 @@ Date: 2026-04-11 01:09:42
 LastEditors: Dodotry
 LastEditTime: 2026-04-11 21:58:35
 """
-import os
 import csv
 import xlsxwriter
 from loguru import logger
 import PySimpleGUI as sg
 
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+import queue
+import threading
+
+
+
 # ===================== 全局配置 =====================
 sg.theme("LightGrey1")
 sg.set_options(font=("微软雅黑", 12), element_padding=(10, 5))
+
+
+log_queue: queue.Queue = queue.Queue(maxsize=1000)  # 日志队列
+
+log_event = threading.Event()  # 日志更新事件
+stop_event = threading.Event()  # 停止事件
+exceutor = ThreadPoolExecutor(max_workers=4)  # 线程池
+
 
 # Loguru 日志配置
 logger.remove()
@@ -24,15 +38,21 @@ window: sg.Window = None
 
 
 def log_handler(msg):
-    current = window["-LOG-"].get()
-    lines = current.splitlines()
-    if len(lines) >= 500:
-        window["-LOG-"].update("\n".join(lines[10:]))  # 删除前10行
-    window["-LOG-"].update(msg, append=True)
+    try:
+        log_queue.put_nowait(msg.strip())
+        log_event.set()  # 触发日志更新事件
+    except queue.Full:
+        try:
+            log_queue.get_nowait()  # 丢弃最旧的日志
+            log_queue.put_nowait(msg.strip())
+            log_event.set()
+        except:
+            pass
 
 
 logger.add(log_handler, format="{time:HH:mm:ss} | {level: <5} | {message}")
 
+list_files =  lambda d : sorted(Path(d).rglob("*.csv"))
 
 # ===================== 界面布局 =====================
 def make_layout():
@@ -179,11 +199,11 @@ def csv2excel_fast(csv_path, xlsx_path):
 
 
 def convert_all(src_dir, save_dir):
-    if not os.path.isdir(src_dir):
+    if not Path(src_dir).exists():
         logger.error("源目录不存在")
         return
 
-    files = [f for f in os.listdir(src_dir) if f.lower().endswith(".csv")]
+    files = list_files(src_dir)
     if not files:
         logger.warning("未找到CSV文件")
         return
@@ -192,15 +212,14 @@ def convert_all(src_dir, save_dir):
 
     ok = 0
     for fn in files:
-        csv_file = os.path.join(src_dir, fn)
-        base = os.path.splitext(fn)[0]
-        out_dir = save_dir.strip() or src_dir
-        os.makedirs(out_dir, exist_ok=True)
-        xlsx_file = os.path.join(out_dir, base + ".xlsx")
+        xlsx_file = fn.stem + ".xlsx"
+        out_dir = fn.parent if not save_dir.strip() else Path(save_dir)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        save_file = out_dir / xlsx_file
 
         logger.info(f"转换中: {fn}")
-        if csv2excel_fast(csv_file, xlsx_file):
-            logger.success(f"✅ 完成: {fn} → {os.path.basename(xlsx_file)}")
+        if csv2excel_fast(fn, save_file):
+            logger.success(f"✅ 完成: {fn} → {save_file}")
             ok += 1
         else:
             logger.error(f"❌ 失败: {fn}")
@@ -214,12 +233,25 @@ def main():
     window = sg.Window("CSV2Excel", make_layout(), size=(800, 600), resizable=False)
 
     while True:
-        event, values = window.read(timeout=100)
 
-        # 实时刷新日志
-        if log_buffer:
-            window["-LOG-"].update("\n".join(log_buffer))
-            window["-LOG-"]  # 滚动到底部
+        if log_event.is_set():
+            new_logs = []
+            while not log_queue.empty():
+                try:
+                    new_logs.append(log_queue.get_nowait())
+                except queue.Empty:
+                    break
+
+            current_text = window["-LOG-"].get()
+            current_lines = current_text.splitlines() if current_text else []
+            all_lines = current_lines + new_logs
+            if len(all_lines) > 500:
+                all_lines = all_lines[-500:]  # 保留最新的500行
+            window["-LOG-"].update("\n".join(all_lines))
+            window["-LOG-"].set_vscroll_position(1.0)  #
+            log_event.clear()
+
+        event,values = window.read(timeout=50)
 
         # 退出
         if event in (sg.WIN_CLOSED, "❌ 退出"):
@@ -227,9 +259,14 @@ def main():
 
         # 清空日志
         if event == "🧹 清空日志":
-            if log_buffer is not None:
-                log_buffer.clear()
             window["-LOG-"].update("")
+
+            while not log_queue.empty():
+                try:
+                    log_queue.get_nowait()
+                except queue.Empty:
+                    break
+            log_event.clear()
             continue
 
         # 开始转换（执行时禁用按钮）
@@ -247,16 +284,26 @@ def main():
             )
             window.refresh()  # 立即刷新界面
 
-            try:
-                logger.info("🚀 开始批量转换")
-                convert_all(src, save)
-            finally:
-                # ===================== 恢复按钮 =====================
-                window["-RUN-"].update(
-                    disabled=False, text="▶ 开始转换", button_color=("white", "#2E86AB")
-                )
-                window.refresh()
+            def run_conversion():
+                try:
+                    logger.info("🚀 开始批量转换")
+                    convert_all(src, save)
+                except Exception as e:
+                    logger.error(f"转换过程中发生错误: {str(e)}")
+                finally:
+                    window.write_event_value("-CONMERT_DONE-", None)  # 触发转换完成事件
+            exceutor.submit(run_conversion)
+        
+        if event == "-CONMERT_DONE-":
+            # ===================== 恢复按钮 =====================
+            window["-RUN-"].update(
+                disabled=False, text="▶ 开始转换", button_color=("white", "#002ccc")
+            )
+            logger.success("🎉 转换任务完成！")
+            window.refresh()  # 立即刷新界面
 
+    stop_event.set()  # 触发停止事件
+    exceutor.shutdown(wait=True)  # 关闭线程池
     window.close()
 
 
