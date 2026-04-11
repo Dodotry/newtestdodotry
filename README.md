@@ -48,13 +48,13 @@ python -m nuitka --mode=standalone `
 --include-data-files=D:\\uvtest\\src\\editvedio\\ffmpeg.exe=./ffmpeg.exe
 --assume-yes-for-downloads --show-progress main.py
 
-
-nuitka --mode=onefile `
+python -m nuitka --mode=onefile `
 >> --nofollow-imports `
 >> --include-module=PySimpleGUI --include-module=loguru --include-module=xlsxwriter `
 >> --lto=yes --remove-output `
 >> --assume-yes-for-downloads --low-memory --windows-icon-from-ico="D:\Users\Dodotry\Downloads\fit.ico" `
 >> --file-version="0.1.0" --product-version="0.1.0" --product-name='csvtoxlsx' --copyright="Copyright@2026 By Dodotry" --enable-plugin=tk-inter `
+>> --windows-console-mode=disable `
 >> --run .\csvtoxlsx.py
 
 ```
