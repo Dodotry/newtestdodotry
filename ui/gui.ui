@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainwind</class>
+ <widget class="QWidget" name="mainwind">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>823</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CSV2XLSX</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="QIcon::ThemeIcon::DocumentProperties"/>
+  </property>
+  <layout class="QVBoxLayout" name="mainlayout">
+   <item>
+    <layout class="QHBoxLayout" name="toplayout">
+     <item>
+      <widget class="QLabel" name="srclabel">
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>源文件</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="src_dir">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+                border: 1px solid #888;           /* 边框宽度、颜色 */
+                border-radius: 6px;               /* 圆角 */
+                padding: 6px;                      /* 内边距 */
+                background-color: #f5f5f5;         /* 背景色 */
+                color: #333;                       /* 文字颜色 */
+                selection-background-color: #298DFF; /* 选中文本背景色 */
+                selection-color: white;            /* 选中文本颜色 */
+            }</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="border" stdset="0">
+        <string>2px solid #888;</string>
+       </property>
+       <property name="border-radius" stdset="0">
+        <string>6px;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="srcbtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>12</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+background-color: rgb(85, 0, 255);
+color: white;
+border-radius: 5px;
+padding: 3px 10px;
+}
+QPushButton:hover {
+background-color: #d20e1e;
+}
+</string>
+       </property>
+       <property name="text">
+        <string>浏  览</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="save_label">
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>保存</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="output_dir">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLineEdit {
+                border: 1px solid #888;           /* 边框宽度、颜色 */
+                border-radius: 6px;               /* 圆角 */
+                padding: 6px;                      /* 内边距 */
+                background-color: #f5f5f5;         /* 背景色 */
+                color: #333;                       /* 文字颜色 */
+                selection-background-color: #298DFF; /* 选中文本背景色 */
+                selection-color: white;            /* 选中文本颜色 */
+            }</string>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+       <property name="placeholderText">
+        <string>默认为源文件同一目录</string>
+       </property>
+       <property name="border" stdset="0">
+        <string>2px solid #888;</string>
+       </property>
+       <property name="border-radius" stdset="0">
+        <string>6px;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="dstbtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>81</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>12</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+background-color: rgb(85, 0, 255);
+color: white;
+border-radius: 5px;
+padding: 3px 10px;
+}
+QPushButton:hover {
+background-color: #d20e1e;
+}</string>
+       </property>
+       <property name="text">
+        <string>浏  览</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="logpannel">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(246, 248, 250);</string>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="2px solid #888;" stdset="0">
+      <string/>
+     </property>
+     <property name="border" stdset="0">
+      <string>2px solid #888;</string>
+     </property>
+     <property name="border-radius" stdset="0">
+      <string>6px</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttomlayout">
+     <item>
+      <spacer name="buttonspace">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="startbtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>12</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+background-color: rgb(85, 0, 255);
+color: white;
+border-radius: 5px;
+padding: 3px 10px;
+}
+QPushButton:hover {
+background-color: #d20e1e;
+}
+QPushButton:disabled {
+    background-color: #dcdde1; 
+    color: #7f8c8d;       
+    border: 1px solid #bdc3c7;
+}</string>
+       </property>
+       <property name="text">
+        <string>开  始</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="clearbtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>12</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+background-color: rgb(85, 0, 255);
+color: white;
+border-radius: 5px;
+padding: 3px 10px;
+}
+QPushButton:hover {
+background-color: #d20e1e;
+}</string>
+       </property>
+       <property name="text">
+        <string>清  空</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="exitbtn">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>60</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>12</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+         <kerning>true</kerning>
+        </font>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+background-color: rgb(85, 0, 255);
+color: white;
+border-radius: 5px;
+padding: 3px 10px;
+}
+QPushButton:hover {
+background-color: #d20e1e;
+}</string>
+       </property>
+       <property name="text">
+        <string>退  出</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>logpannel</tabstop>
+  <tabstop>srcbtn</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>exitbtn</sender>
+   <signal>clicked()</signal>
+   <receiver>mainwind</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>779</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>822</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>clearbtn</sender>
+   <signal>clicked()</signal>
+   <receiver>logpannel</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>684</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>689</x>
+     <y>391</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
