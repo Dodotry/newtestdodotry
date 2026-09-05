@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📂 文件存储服务 - {{.Name}}</title>
+    <style>
+        :root { --bg: #f8f9fa; --card-bg: #ffffff; --text: #212529; --border: #dee2e6; --primary: #0d6efd; --hover: #f1f3f5; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #121212; --card-bg: #1e1e1e; --text: #e0e0e0; --border: #333333; --primary: #3700b3; --hover: #2d2d2d; } }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.4rem; margin-top: 0; font-weight: 600; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+        .search-box { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--text); box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-weight: 600; background-color: var(--bg); }
+        tr:hover { background-color: var(--hover); }
+        a { color: var(--text); text-decoration: none; display: inline-block; width: 100%; }
+        a:hover { color: var(--primary); }
+        .size { text-align: right; color: #888; font-size: 0.9rem; }
+        .time { color: #888; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 目录索引: {{.Path}}</h1>
+        <!-- 实时前端文件搜索框 -->
+        <input type="text" id="search" class="search-box" placeholder="🔍 输入关键字实时筛选文件..." onkeyup="filterFiles()">
+        <table>
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th>修改时间</th>
+                    <th class="size">大小</th>
+                </tr>
+            </thead>
+            <tbody id="file-list">
+                {{if .CanGoUp}}
+                <tr>
+                    <td><a href="..">⬅️ .. (返回上一级)</a></td>
+                    <td class="time">-</td>
+                    <td class="size">-</td>
+                </tr>
+                {{end}}
+                {{range .Items}}
+                <tr class="file-item">
+                    <td class="name"><a href="{{.URL}}">{{if .IsDir}}📁{{else}}📄{{end}} {{.Name}}</a></td>
+                    <td class="time">{{.HumanModTime "2006-01-02 15:04"}}</td>
+                    <td class="size">{{if .IsDir}}-{{else}}{{.HumanSize}}{{end}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function filterFiles() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let rows = document.getElementsByClassName('file-item');
+            for (let i = 0; i < rows.length; i++) {
+                let name = rows[i].getElementsByClassName('name')[0].textContent.toLowerCase();
+                rows[i].style.display = name.includes(input) ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
+

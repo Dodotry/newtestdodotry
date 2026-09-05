@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📂 文件存储服务-{{.Name}}</title>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background-color: #f5f5f7; color: #1d1d1f; padding: 30px 15px; }
+        .window { max-width: 1050px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); border: 1px solid #d2d2d7; overflow: hidden; }
+        .title-bar { background: #f5f5f7; padding: 14px 20px; border-bottom: 1px solid #d2d2d7; display: flex; align-items: center; justify-content: space-between; }
+        .dots { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-r { background: #ff5f56; } .dot-y { background: #ffbd2e; } .dot-g { background: #27c93f; }
+        .path-text { font-size: 0.9rem; color: #86868b; font-weight: 500; font-family: monospace; }
+        .search-container { padding: 15px 20px; background: #fafafa; border-bottom: 1px solid #e5e5ea; }
+        .search-input { width: 100%; padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-size: 0.9rem; background: #ffffff; box-sizing: border-box; outline: none; }
+        .search-input:focus { border-color: #0071e3; box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 20px; text-align: left; font-size: 0.95rem; }
+        th { font-weight: 600; color: #86868b; background: #ffffff; border-bottom: 2px solid #e5e5ea; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { border-bottom: 1px solid #f5f5f7; color: #1d1d1f; }
+        tr:hover { background-color: #f5f5f7; }
+        a { color: #0066cc; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        a:hover { color: #0071e3; text-decoration: underline; }
+        .folder { color: #0071e3; font-weight: 500; }
+        .meta-text { color: #86868b; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+            <div class="path-text">本地文件{{.Path}}</div>
+            <div></div>
+        </div>
+        <div class="search-container">
+            <input type="text" id="search" class="search-input" placeholder="🔍 在当前目录下搜索文件..." onkeyup="doSearch()">
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>文件名</th>
+                    <th>修改日期</th>
+                    <th style="text-align: right;">大小</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+                {{if .CanGoUp}}
+                <tr class="item">
+                    <td class="fname"><a href=".." class="folder">📁 .. (返回上级目录)</a></td>
+                    <td class="meta-text">-</td>
+                    <td style="text-align: right;" class="meta-text">-</td>
+                </tr>
+                {{end}}
+                {{range .Items}}
+                <tr class="item">
+                    <td class="fname">
+                        <a href="{{.URL}}" class="{{if .IsDir}}folder{{end}}">
+                            {{if .IsDir}}📂{{else}}📄{{end}} {{.Name}}
+                        </a>
+                    </td>
+                    <td class="meta-text">{{.HumanModTime "2006-01-02 15:04"}}</td>
+                    <td style="text-align: right;" class="meta-text">{{if .IsDir}}-{{else}}{{.HumanSize}}{{end}}</td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function doSearch() {
+            let q = document.getElementById('search').value.toLowerCase();
+            let rows = document.getElementsByClassName('item');
+            for (let i = 0; i < rows.length; i++) {
+                let txt = rows[i].getElementsByClassName('fname')[0].innerText.toLowerCase();
+                rows[i].style.display = txt.includes(q) ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
+
