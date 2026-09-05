@@ -1,0 +1,56 @@
+{
+	# auto_https off
+	#    http_port 80
+	log {
+		output file /opt/logs/caddy_access.log {
+			roll_size 50mb
+			roll_keep 10
+			roll_keep_days 7
+		}
+		format json
+	}
+}
+
+# 1. 1Panel 面板入口
+panel.local {
+	encode gzip
+	header Server "nginx/1.24.0"
+	reverse_proxy 192.168.2.100:8809
+}
+
+# 2. IPTV 服务（直通根目录，静态资源 100% 正常）
+iptv.local {
+	encode gzip
+	reverse_proxy 192.168.2.100:280
+}
+
+# 3. DNS 管理服务
+dns.local {
+	encode gzip
+	reverse_proxy 192.168.2.100:5180
+}
+
+# 4. SmartDNS 服务
+smartdns.local {
+	encode gzip
+	reverse_proxy 192.168.2.100:6080
+}
+
+# 5. 小雅服务
+xiaoya.local {
+    encode gzip
+    header -X-Frame-Options
+    header -Frame-Options    
+    reverse_proxy 192.168.2.100:4567
+}
+
+# 6. 本地静态文件浏览
+files.local {
+	encode gzip
+	# header -Server
+	# 映射到你之前创建的软链接 /opt/files (指向 /opt/src/iptvapi/output)
+	root * /opt/files
+	file_server { 
+                      browse /opt/caddy/templates/browse_mac.html
+                    }
+}
